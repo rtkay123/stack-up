@@ -4,3 +4,10 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+tracing = { version = "0.1.41", optional = true }
+tracing-subscriber = { version = "0.3.19", optional = true }
+
+[features]
+default = []
+tracing-subscriber = ["dep:tracing-subscriber", "tracing-subscriber/env-filter"]
+tracing = ["dep:tracing"]
