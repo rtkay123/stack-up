@@ -35,6 +35,8 @@ pub(crate) fn default_log() -> Option<Arc<str>> {
 #[derive(Clone, Debug, Deserialize)]
 pub struct Configuration {
     pub application: AppConfig,
+    #[cfg(feature = "postgres")]
+    pub database: crate::postgres::PostgresConfig,
     #[serde(default)]
     pub misc: serde_json::Value,
 }
