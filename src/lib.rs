@@ -3,3 +3,6 @@
 #[cfg(feature = "tracing")]
 #[cfg_attr(docsrs, doc(cfg(feature = "tracing")))]
 pub mod tracing;
+
+mod config;
+pub use config::*;
