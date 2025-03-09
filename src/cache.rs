@@ -72,7 +72,7 @@ pub enum RedisManager {
 }
 
 impl RedisManager {
-    async fn new(config: &CacheConfig) -> Result<Self, ServiceError> {
+    pub async fn new(config: &CacheConfig) -> Result<Self, ServiceError> {
         if config.pooled {
             Self::new_pooled(
                 config.redis_dsn.as_ref(),
