@@ -1,7 +1,10 @@
-use sellershut_services::tracing::TracingBuilder;
+use sellershut_services::{Monitoring, tracing::TracingBuilder};
 
 fn main() {
-    let _tracing = TracingBuilder::default().build(None);
+    let config = Monitoring {
+        log_level: "info".to_string(),
+    };
+    let _tracing = TracingBuilder::default().build(&config);
 
     tracing::info!("hello from tracing");
 }

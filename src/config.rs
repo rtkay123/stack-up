@@ -13,10 +13,6 @@ pub struct AppConfig {
     #[cfg(feature = "api")]
     #[serde(default = "default_port")]
     pub port: u16,
-    #[serde(rename = "log-level")]
-    #[cfg(feature = "tracing")]
-    #[serde(default = "default_log")]
-    pub log_level: Option<Arc<str>>,
 }
 
 #[cfg(feature = "api")]
@@ -25,11 +21,11 @@ pub(crate) fn default_port() -> u16 {
 }
 
 #[cfg(feature = "tracing")]
-pub(crate) fn default_log() -> Option<Arc<str>> {
+pub(crate) fn default_log() -> String {
     #[cfg(debug_assertions)]
-    return Some("debug".into());
+    return "debug".into();
     #[cfg(not(debug_assertions))]
-    Some("info".into())
+    "info".into()
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -41,6 +37,19 @@ pub struct Configuration {
     pub cache: crate::cache::CacheConfig,
     #[serde(default)]
     pub misc: serde_json::Value,
+    #[cfg(feature = "tracing")]
+    pub monitoring: Monitoring,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct Monitoring {
+    #[serde(rename = "log-level")]
+    #[cfg(feature = "tracing")]
+    #[serde(default = "default_log")]
+    pub log_level: String,
+    #[cfg(feature = "opentelemetry")]
+    #[serde(rename = "opentelemetry-endpoint")]
+    pub opentelemetry_endpoint: Arc<str>,
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Eq, Default)]

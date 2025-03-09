@@ -2,6 +2,8 @@ use tracing_subscriber::{
     EnvFilter, Layer, Registry, layer::SubscriberExt, util::SubscriberInitExt,
 };
 
+use crate::Monitoring;
+
 /// Telemetry handle
 #[allow(missing_debug_implementations)]
 pub struct Tracing {}
@@ -48,7 +50,7 @@ impl TracingBuilder {
     pub fn try_with_opentelemetry(
         mut self,
         config: &crate::AppConfig,
-        endpoint: &str,
+        monitoring: &Monitoring,
     ) -> Result<Self, crate::ServiceError> {
         use opentelemetry::{KeyValue, global, trace::TracerProvider};
         use opentelemetry_otlp::WithExportConfig;
@@ -75,11 +77,12 @@ impl TracingBuilder {
                 ],
                 SCHEMA_URL,
             )
+            .with_service_name(config.name.to_string())
             .build();
 
         let exporter = opentelemetry_otlp::SpanExporter::builder()
             .with_tonic()
-            .with_endpoint(endpoint)
+            .with_endpoint(monitoring.opentelemetry_endpoint.as_ref())
             .build()?;
 
         let provider = SdkTracerProvider::builder()
@@ -103,17 +106,20 @@ impl TracingBuilder {
     /// # Examples
     /// ```
     /// # use sellershut_services::tracing::TracingBuilder;
-    /// let _tracing = TracingBuilder::new().build(None);
+    //  # let config = crate::Monitoring {
+    //  #     log_level: "info".to_string(),
+    //  #     #[cfg(feature = "opentelemetry")]
+    //  #     opentelemetry_endpoint: "http://localhost:4317".into(),
+    //  # };
+    /// let _tracing = TracingBuilder::new().build(&config);
     /// ```
-    pub fn build(self, level: Option<std::sync::Arc<str>>) -> Tracing {
-        let level = if let Some(level) = level {
-            level.to_string()
-        } else {
-            "info".to_string()
-        };
+    pub fn build(self, config: &Monitoring) -> Tracing {
         tracing_subscriber::registry()
             .with(self.layer)
-            .with(EnvFilter::try_from_default_env().unwrap_or_else(|_| level.into()))
+            .with(
+                EnvFilter::try_from_default_env()
+                    .unwrap_or_else(|_| config.log_level.to_string().into()),
+            )
             .try_init()
             .ok();
         Tracing {}
@@ -127,7 +133,11 @@ mod tests {
     #[test]
     fn build() {
         let builder = Tracing::builder();
-        let level = crate::config::default_log();
-        builder.build(level);
+        let level = Monitoring {
+            log_level: "info".to_string(),
+            #[cfg(feature = "opentelemetry")]
+            opentelemetry_endpoint: "http://localhost:4317".into(),
+        };
+        builder.build(&level);
     }
 }
