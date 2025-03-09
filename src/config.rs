@@ -37,6 +37,8 @@ pub struct Configuration {
     pub application: AppConfig,
     #[cfg(feature = "postgres")]
     pub database: crate::postgres::PostgresConfig,
+    #[cfg(feature = "cache")]
+    pub cache: crate::cache::CacheConfig,
     #[serde(default)]
     pub misc: serde_json::Value,
 }

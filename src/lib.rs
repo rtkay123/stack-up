@@ -4,6 +4,10 @@
 #[cfg_attr(docsrs, doc(cfg(feature = "tracing")))]
 pub mod tracing;
 
+#[cfg(feature = "cache")]
+#[cfg_attr(docsrs, doc(cfg(feature = "cache")))]
+pub mod cache;
+
 #[cfg(feature = "postgres")]
 #[cfg_attr(docsrs, doc(cfg(feature = "postgres")))]
 pub mod postgres;
@@ -16,6 +20,9 @@ pub struct Services {
     #[cfg(feature = "postgres")]
     #[builder(setters(vis = "", name = pg_internal))]
     pub postgres: sqlx::PgPool,
+    #[cfg(feature = "cache")]
+    #[builder(setters(vis = "", name = cache_internal))]
+    pub cache: cache::RedisManager,
 }
 
 #[derive(thiserror::Error, Debug)]
