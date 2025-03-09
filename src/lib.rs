@@ -37,4 +37,8 @@ pub enum ServiceError {
     #[error(transparent)]
     /// Postgres error
     Postgres(#[from] sqlx::Error),
+    #[cfg(feature = "cache")]
+    #[error(transparent)]
+    /// Redis error
+    Cache(#[from] redis::RedisError),
 }
