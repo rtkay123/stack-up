@@ -1676,7 +1676,6 @@ dependencies = [
 name = "sellershut-services"
 version = "0.1.0"
 dependencies = [
- "async-trait",
  "bb8",
  "bb8-redis",
  "bon",
