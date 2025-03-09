@@ -9,6 +9,10 @@ async-trait = { version = "0.1.87", optional = true }
 bb8 = { version = "0.9.0", optional = true }
 bb8-redis = { version = "0.21.0", optional = true }
 bon = "3.4.0"
+opentelemetry = { version = "0.28.0", optional = true, default-features = false }
+opentelemetry-otlp = { version = "0.28.0", default-features = false, optional = true }
+opentelemetry-semantic-conventions = { version = "0.28.0", default-features = false, optional = true }
+opentelemetry_sdk = { version = "0.28.0", default-features = false, optional = true }
 redis = { version = "0.29.1", optional = true, default-features = false }
 secrecy = { version = "0.10.3", optional = true }
 serde = { version = "1.0.218", features = ["derive", "rc"] }
@@ -17,14 +21,13 @@ sqlx = { version = "0.8.3", optional = true, default-features = false }
 thiserror = "2.0.12"
 tokio = { version = "1.44.0", optional = true }
 tracing = { version = "0.1.41", optional = true }
+tracing-opentelemetry = { version = "0.29.0", optional = true }
 tracing-subscriber = { version = "0.3.19", optional = true }
 url = { version = "2.5.4", optional = true }
 
 [features]
 default = []
 api = []
-tracing = ["dep:tracing", "tracing-subscriber/env-filter"]
-postgres = ["sqlx/postgres", "url/serde", "secrecy/serde"]
 cache = [
     "dep:redis",
     "redis/cluster-async",
@@ -35,9 +38,20 @@ cache = [
     "dep:bb8",
     "dep:bb8-redis",
     "dep:async-trait",
-    "url/serde"
+    "url/serde",
 ]
+opentelemetry = [
+    "dep:opentelemetry",
+    "dep:tracing-opentelemetry",
+    "tracing",
+    "opentelemetry_sdk/rt-tokio",
+    "opentelemetry-otlp/grpc-tonic",
+    "opentelemetry-otlp/http-proto",
+    "opentelemetry-semantic-conventions/semconv_experimental",
+]
+postgres = ["sqlx/postgres", "url/serde", "secrecy/serde"]
 tokio = ["dep:tokio"]
+tracing = ["dep:tracing", "tracing-subscriber/env-filter"]
 
 [[example]]
 name = "tracing"

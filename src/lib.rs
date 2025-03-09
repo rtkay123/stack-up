@@ -41,4 +41,8 @@ pub enum ServiceError {
     #[error(transparent)]
     /// Redis error
     Cache(#[from] redis::RedisError),
+    #[cfg(feature = "opentelemetry")]
+    #[error(transparent)]
+    /// When creating the tracing layer
+    Opentelemetry(#[from] opentelemetry::trace::TraceError),
 }
