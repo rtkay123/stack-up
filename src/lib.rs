@@ -12,6 +12,13 @@ pub mod cache;
 #[cfg_attr(docsrs, doc(cfg(feature = "postgres")))]
 pub mod postgres;
 
+#[cfg(any(feature = "nats-core", feature = "nats-jetstream"))]
+#[cfg_attr(
+    docsrs,
+    doc(cfg(any(feature = "nats-core", feature = "nats-jetstream")))
+)]
+pub mod nats;
+
 mod config;
 pub use config::*;
 
@@ -23,6 +30,16 @@ pub struct Services {
     #[cfg(feature = "cache")]
     #[builder(setters(vis = "", name = cache_internal))]
     pub cache: cache::RedisManager,
+    #[cfg(feature = "nats-core")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "nats-core")))]
+    #[builder(setters(vis = "", name = nats_internal))]
+    /// NATS connection handle
+    pub nats: async_nats::Client,
+    #[cfg(feature = "nats-jetstream")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "nats-jetstream")))]
+    #[builder(setters(vis = "", name = jetstream_internal))]
+    /// NATS-Jetstream connection handle
+    pub jetstream: async_nats::jetstream::Context,
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -45,4 +62,8 @@ pub enum ServiceError {
     #[error(transparent)]
     /// When creating the tracing layer
     Opentelemetry(#[from] opentelemetry::trace::TraceError),
+    #[cfg(any(feature = "nats-core", feature = "nats-jetstream"))]
+    #[error(transparent)]
+    /// NATS error
+    Nats(#[from] async_nats::error::Error<async_nats::ConnectErrorKind>),
 }

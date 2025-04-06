@@ -39,6 +39,8 @@ pub struct Configuration {
     pub misc: serde_json::Value,
     #[cfg(feature = "tracing")]
     pub monitoring: Monitoring,
+    #[cfg(any(feature = "nats-core", feature = "nats-jetstream"))]
+    pub nats: crate::nats::NatsConfig,
 }
 
 #[derive(Clone, Debug, Deserialize)]
