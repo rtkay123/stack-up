@@ -30,7 +30,7 @@ pub mod nats {
 #[cfg(feature = "tonic")]
 pub mod tonic {
     pub mod extractor {
-        pub struct MetadataMap<'a>(&'a tonic::metadata::MetadataMap);
+        pub struct MetadataMap<'a>(pub &'a tonic::metadata::MetadataMap);
         impl opentelemetry::propagation::Extractor for MetadataMap<'_> {
             fn get(&self, key: &str) -> Option<&str> {
                 self.0.get(key).and_then(|metadata| metadata.to_str().ok())
@@ -50,7 +50,7 @@ pub mod tonic {
     }
 
     pub mod injector {
-        pub struct MetadataMap<'a>(&'a mut tonic::metadata::MetadataMap);
+        pub struct MetadataMap<'a>(pub &'a mut tonic::metadata::MetadataMap);
 
         impl opentelemetry::propagation::Injector for MetadataMap<'_> {
             /// Set a key and value in the MetadataMap.  Does nothing if the key or value are not valid inputs
