@@ -1,3 +1,6 @@
+#[cfg(feature = "opentelemetry")]
+pub mod telemetry;
+
 use tracing_subscriber::{
     EnvFilter, Layer, Registry, layer::SubscriberExt, util::SubscriberInitExt,
 };
@@ -52,7 +55,11 @@ impl TracingBuilder {
         config: &crate::AppConfig,
         monitoring: &Monitoring,
     ) -> Result<Self, crate::ServiceError> {
-        use opentelemetry::{KeyValue, global, trace::TracerProvider};
+        use opentelemetry::{
+            KeyValue,
+            global::{self},
+            trace::TracerProvider,
+        };
         use opentelemetry_otlp::WithExportConfig;
         use opentelemetry_sdk::{
             Resource,
@@ -83,7 +90,8 @@ impl TracingBuilder {
         let exporter = opentelemetry_otlp::SpanExporter::builder()
             .with_tonic()
             .with_endpoint(monitoring.opentelemetry_endpoint.as_ref())
-            .build()?;
+            .build()
+            .unwrap();
 
         let provider = SdkTracerProvider::builder()
             .with_batch_exporter(exporter)
@@ -95,9 +103,9 @@ impl TracingBuilder {
             .build();
 
         global::set_tracer_provider(provider.clone());
-        let tracer = provider.tracer(config.name.to_string());
 
-        self.layer.push(OpenTelemetryLayer::new(tracer).boxed());
+        let layer = OpenTelemetryLayer::new(provider.tracer(config.name.as_ref().to_string()));
+        self.layer.push(layer.boxed());
 
         Ok(self)
     }

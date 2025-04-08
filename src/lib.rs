@@ -61,7 +61,7 @@ pub enum ServiceError {
     #[cfg(feature = "opentelemetry")]
     #[error(transparent)]
     /// When creating the tracing layer
-    Opentelemetry(#[from] opentelemetry::trace::TraceError),
+    Opentelemetry(#[from] opentelemetry_sdk::trace::TraceError),
     #[cfg(any(feature = "nats-core", feature = "nats-jetstream"))]
     #[error(transparent)]
     /// NATS error
