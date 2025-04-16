@@ -66,4 +66,8 @@ pub enum ServiceError {
     #[error(transparent)]
     /// NATS error
     Nats(#[from] async_nats::error::Error<async_nats::ConnectErrorKind>),
+    #[cfg(feature = "tracing-loki")]
+    #[error(transparent)]
+    /// When creating the tracing layer
+    Loki(#[from] tracing_loki::Error),
 }

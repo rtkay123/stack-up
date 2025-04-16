@@ -51,7 +51,22 @@ pub struct Monitoring {
     pub log_level: String,
     #[cfg(feature = "opentelemetry")]
     #[serde(rename = "opentelemetry-endpoint")]
+    #[serde(default = "default_opentelemetry")]
     pub opentelemetry_endpoint: Arc<str>,
+    #[cfg(feature = "tracing-loki")]
+    #[serde(rename = "loki-endpoint")]
+    #[serde(default = "default_loki")]
+    pub loki_endpoint: Arc<str>,
+}
+
+#[cfg(feature = "tracing-loki")]
+pub(crate) fn default_loki() -> Arc<str> {
+    "http://localhost:3100".into()
+}
+
+#[cfg(feature = "opentelemetry")]
+pub(crate) fn default_opentelemetry() -> Arc<str> {
+    "http://localhost:4317".into()
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Eq, Default)]
