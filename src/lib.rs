@@ -8,6 +8,9 @@ pub mod tracing;
 #[cfg_attr(docsrs, doc(cfg(feature = "cache")))]
 pub mod cache;
 
+#[cfg(feature = "cache")]
+pub use redis;
+
 #[cfg(feature = "postgres")]
 #[cfg_attr(docsrs, doc(cfg(feature = "postgres")))]
 pub mod postgres;
