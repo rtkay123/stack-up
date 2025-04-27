@@ -11,6 +11,17 @@ pub mod cache;
 #[cfg(feature = "cache")]
 pub use redis;
 
+#[cfg(feature = "opentelemetry")]
+mod otel {
+    pub use opentelemetry;
+    pub use opentelemetry_otlp;
+    pub use opentelemetry_sdk;
+    pub use opentelemetry_semantic_conventions;
+}
+
+#[cfg(feature = "opentelemetry")]
+pub use otel::*;
+
 #[cfg(feature = "postgres")]
 #[cfg_attr(docsrs, doc(cfg(feature = "postgres")))]
 pub mod postgres;
