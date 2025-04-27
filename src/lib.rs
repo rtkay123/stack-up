@@ -14,6 +14,7 @@ pub use redis;
 #[cfg(feature = "opentelemetry")]
 mod otel {
     pub use opentelemetry;
+    pub use opentelemetry_http;
     pub use opentelemetry_otlp;
     pub use opentelemetry_sdk;
     pub use opentelemetry_semantic_conventions;
