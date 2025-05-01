@@ -18,6 +18,7 @@ mod otel {
     pub use opentelemetry_otlp;
     pub use opentelemetry_sdk;
     pub use opentelemetry_semantic_conventions;
+    pub use tracing_opentelemetry;
 }
 
 #[cfg(feature = "opentelemetry")]
