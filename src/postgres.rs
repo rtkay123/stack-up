@@ -105,7 +105,7 @@ mod test {
     use crate::Services;
 
     #[tokio::test]
-    async fn docker_sellershut_db() {
+    async fn docker_stack_db() {
         let port = default_port();
         let name = "";
         let host = "localhost";

@@ -1,4 +1,4 @@
-use sellershut_services::{Monitoring, tracing::TracingBuilder};
+use stack_up::{Monitoring, tracing::TracingBuilder};
 
 fn main() {
     let config = Monitoring {
