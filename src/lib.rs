@@ -11,6 +11,9 @@ pub mod cache;
 #[cfg(feature = "cache")]
 pub use redis;
 
+#[cfg(any(feature = "nats-core", feature = "nats-jetstream"))]
+pub use async_nats;
+
 #[cfg(feature = "opentelemetry")]
 mod otel {
     pub use opentelemetry;
