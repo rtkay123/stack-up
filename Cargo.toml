@@ -57,9 +57,8 @@ opentelemetry = [
     "opentelemetry-semantic-conventions/semconv_experimental",
 ]
 postgres = ["sqlx/postgres", "url/serde", "secrecy/serde"]
-tokio = ["dep:tokio"]
 tracing = ["dep:tracing", "tracing-subscriber/env-filter"]
-tonic = ["dep:tonic"]
+opentelemetry-tonic = ["dep:tonic"]
 tracing-loki = ["dep:tracing-loki", "tracing"]
 
 [[example]]
