@@ -27,7 +27,7 @@ pub mod nats {
     }
 }
 
-#[cfg(feature = "tonic")]
+#[cfg(feature = "opentelemetry-tonic")]
 pub mod tonic {
     pub mod extractor {
         pub struct MetadataMap<'a>(pub &'a tonic::metadata::MetadataMap);
