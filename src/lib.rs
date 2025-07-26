@@ -45,20 +45,20 @@ pub use config::*;
 pub struct Services {
     #[cfg(feature = "postgres")]
     #[builder(setters(vis = "", name = pg_internal))]
-    pub postgres: sqlx::PgPool,
+    pub postgres: Option<sqlx::PgPool>,
     #[cfg(feature = "cache")]
     #[builder(setters(vis = "", name = cache_internal))]
-    pub cache: cache::RedisManager,
+    pub cache: Option<cache::RedisManager>,
     #[cfg(feature = "nats-core")]
     #[cfg_attr(docsrs, doc(cfg(feature = "nats-core")))]
     #[builder(setters(vis = "", name = nats_internal))]
     /// NATS connection handle
-    pub nats: async_nats::Client,
+    pub nats: Option<async_nats::Client>,
     #[cfg(feature = "nats-jetstream")]
     #[cfg_attr(docsrs, doc(cfg(feature = "nats-jetstream")))]
     #[builder(setters(vis = "", name = jetstream_internal))]
     /// NATS-Jetstream connection handle
-    pub jetstream: async_nats::jetstream::Context,
+    pub jetstream: Option<async_nats::jetstream::Context>,
 }
 
 #[derive(thiserror::Error, Debug)]

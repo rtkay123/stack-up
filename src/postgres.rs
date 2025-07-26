@@ -118,7 +118,7 @@ mod test {
             port,
             name: name.into(),
             host: host.into(),
-            user: user.clone().into(),
+            user: user.clone(),
             password: secrecy::SecretString::new(password.into()),
         };
 
